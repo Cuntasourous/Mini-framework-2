@@ -7,14 +7,16 @@ import { EventBus } from './framework/events.js';
 const store = new Store({
     todos: [],
     filter: 'all',
-    editingId: null
+    editingId: null,
+    aboutVisits: 0,
 });
 
 // Initialize router
 const router = new Router({
     '/': 'all',
     '/active': 'active',
-    '/completed': 'completed'
+    '/completed': 'completed',
+    '/about': 'about',
 });
 
 // Initialize event bus
@@ -125,7 +127,7 @@ function Footer({ todos, filter, onClearCompleted }) {
                         router.navigate('/completed');
                     }
                 }, 'Completed')
-            )
+            ),
         ),
         completedCount > 0 && createElement('button', {
             class: 'clear-completed',
@@ -204,6 +206,22 @@ function App() {
     const allCompleted = todos.length > 0 && todos.every(todo => todo.completed);
 
     return createElement('div', { class: 'todoapp' },
+        createElement('div', { class: 'nav' },
+            createElement('a', {
+                href: '#/',
+                onclick: (e) => {
+                    e.preventDefault();
+                    router.navigate('/');
+                }
+            }, 'Home'),
+            createElement('a', {
+                href: '#/about',
+                onclick: (e) => {
+                    e.preventDefault();
+                    router.navigate('/about');
+                }
+            }, 'About Us')
+        ),
         createElement('h4', {}, 'Write your first To-do List'),
         createElement('br', {}, ''),
         // Select All Checkbox/Button
@@ -254,10 +272,44 @@ function mountApp() {
 
 mountApp();
 
+function About(visits) {
+    return createElement('div', { class: 'about-page' },
+        createElement('h2', {}, 'About Us'),
+        createElement('p', {}, 'This is a simple framework made for learning purposes.'),
+        createElement('p', {}, `You have visited this page ${visits} time${visits === 1 ? '' : 's'}.`),
+        createElement('button', {
+            onclick: () => eventBus.emit('goHome')
+        }, 'Go Home')
+    );
+}
+
+function mountAbout() {
+    const state = store.getState();
+    const count = state.aboutVisits;
+
+    store.dispatch({ aboutVisits: count + 1 });
+
+    const root = document.getElementById('app');
+    root.innerHTML = '';
+    root.appendChild(render(About(count + 1)));
+}
+
+
+eventBus.on('goHome', () => {
+    router.navigate('/');
+});
+
+
+
 // Subscribe to store changes
 store.subscribe(mountApp);
 
 // Subscribe to route changes
 router.subscribe(route => {
-    store.dispatch({ filter: route });
-}); 
+    if (route === 'about') {
+        mountAbout();
+    } else {
+        store.dispatch({ filter: route });
+        mountApp();
+    }
+});
