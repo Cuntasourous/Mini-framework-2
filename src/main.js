@@ -22,27 +22,19 @@ const eventBus = new EventBus();
 
 // Todo component
 function TodoItem({ todo, onToggle, onDestroy, onEditStart, onEditEnd, onEditCancel, editingId }) {
+    //checks if Item is being edited
     const isEditing = editingId === todo.id;
-    const checkboxId = `checkbox-${todo.id}`; // unique ID for label link
-
     return createElement('li', {
         class: (todo.completed ? 'completed ' : '') + (isEditing ? 'editing' : '')
     },
-        // ✅ Custom checkbox with animation
-        createElement('div', { class: 'checkbox-wrapper-19' },
-            createElement('input', {
-                type: 'checkbox',
-                id: checkboxId,
-                checked: todo.completed,
-                onchange: () => onToggle(todo.id)
-            }),
-            createElement('label', {
-                class: 'check-box',
-                for: checkboxId
-            })
-        ),
-
-        // 📝 Edit input or static label
+        // <li> children
+        createElement('input', {
+            class: 'toggle',
+            type: 'checkbox',
+            checked: todo.completed,
+            onchange: () => onToggle(todo.id)
+        }),
+        // checks if its being edited
         isEditing
             ? createElement('input', {
                 class: 'edit',
@@ -62,15 +54,12 @@ function TodoItem({ todo, onToggle, onDestroy, onEditStart, onEditEnd, onEditCan
             : createElement('label', {
                 ondblclick: () => onEditStart(todo.id)
             }, todo.title),
-
-        // ❌ Destroy button
         createElement('button', {
             class: 'destroy',
             onclick: () => onDestroy(todo.id)
         }, '×')
     );
 }
-
 
 // Todo list component
 function TodoList({ todos, filter, onToggle, onDestroy, onEditStart, onEditEnd, onEditCancel, editingId }) {
@@ -203,11 +192,34 @@ function App() {
         store.dispatch({ editingId: null });
     }
 
+    // Select all handler
+    function toggleSelectAll() {
+        const allCompleted = todos.length > 0 && todos.every(todo => todo.completed);
+        store.dispatch({
+            todos: todos.map(todo => ({ ...todo, completed: !allCompleted }))
+        });
+    }
+
+    //Used to reflect the state of the "select all" checkbox
+    const allCompleted = todos.length > 0 && todos.every(todo => todo.completed);
+
     return createElement('div', { class: 'todoapp' },
         createElement('h4', {}, 'Write your first To-do List'),
+        createElement('br', {}, ''),
+        // Select All Checkbox/Button
+        todos.length > 0 && createElement('div', { style: 'display: flex; align-items: center; margin-bottom: 10px;' },
+            createElement('input', {
+                type: 'checkbox',
+                class: 'toggle-all',
+                checked: allCompleted,
+                onclick: toggleSelectAll,
+                title: 'Select/Unselect All'
+            }),
+            createElement('label', { for: 'toggle-all', style: 'margin-left: 8px; cursor: pointer;' }, 'Select All')
+        ),
         createElement('input', {
             class: 'new-todo',
-            placeholder: 'your todo here',
+            placeholder: 'What needs to be done?',
             onkeydown: (e) => {
                 if (e.key === 'Enter' && e.target.value.trim()) {
                     addTodo(e.target.value.trim());
