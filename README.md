@@ -1,6 +1,3 @@
-Here's a rewritten version of the README tailored for your custom JavaScript framework, maintaining clarity but with different tone, structure, and phrasing from the original:
-
----
 
 # Mini Framework
 
