@@ -2,7 +2,7 @@ Here's a rewritten version of the README tailored for your custom JavaScript fra
 
 ---
 
-# MicroDOM Framework
+# Mini Framework
 
 > A minimal JavaScript micro-framework for building interactive web applications without heavy dependencies. It features a virtual DOM renderer, URL-based routing, a simple global state store, and an event bus—offering full control with very little code.
 
