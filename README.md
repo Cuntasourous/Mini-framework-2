@@ -1,7 +1,7 @@
 
 # Mini Framework
 
-> A minimal JavaScript micro-framework for building interactive web applications without heavy dependencies. It features a virtual DOM renderer, URL-based routing, a simple global state store, and an event bus—offering full control with very little code.
+> A minimal JavaScript mini-framework for building interactive web applications without heavy dependencies. It features a virtual DOM renderer, URL-based routing, a simple global state store, and an event bus—offering full control with very little code.
 
 ---
 
@@ -166,23 +166,3 @@ npm start
 ```
 
 Then go to `http://localhost:3000`.
-
----
-
-## ❓ FAQ
-
-**Is this framework production-ready?**
-This is more of an educational and experimental framework to learn how modern libraries like React or Vue work under the hood.
-
-**Can I use JSX?**
-No JSX support by default—everything is written in raw JS using `createElement`.
-
-**What’s the learning goal here?**
-Understand virtual DOM, component architecture, state management, and routing at a low level—without black boxes.
-
-**Is this based on any specific architecture?**
-It borrows concepts from React (VDOM), Redux (state), and Vue Router (routing) but is entirely custom.
-
----
-
-Let me know if you'd like this exported as a file (`README.md`) or need a more advanced or technical breakdown!
